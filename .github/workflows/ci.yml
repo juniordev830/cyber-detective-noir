@@ -1,0 +1,16 @@
+name: Godot detective tests
+on: [push, pull_request]
+jobs:
+  godot:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download Godot 4.3
+        run: |
+          curl -L --fail --retry 3 -o godot.zip https://github.com/godotengine/godot-builds/releases/download/4.3-stable/Godot_v4.3-stable_linux.x86_64.zip
+          unzip -q godot.zip
+          chmod +x Godot_v4.3-stable_linux.x86_64
+      - name: Rule checks
+        run: ./Godot_v4.3-stable_linux.x86_64 --headless --path . --script tests/test_case_rules.gd
+      - name: Scene smoke test
+        run: ./Godot_v4.3-stable_linux.x86_64 --headless --path . --quit-after 5
