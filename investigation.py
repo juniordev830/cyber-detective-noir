@@ -21,10 +21,10 @@ class Clue:
         _text(self.location, "clue location", 80)
         if not isinstance(self.unlocks, tuple):
             raise ValueError("clue prerequisites must be a tuple")
-        if len(self.unlocks) != len(set(self.unlocks)):
-            raise ValueError("duplicate prerequisites are not allowed")
         for prerequisite in self.unlocks:
             _text(prerequisite, "prerequisite", 80)
+        if len(self.unlocks) != len(set(self.unlocks)):
+            raise ValueError("duplicate prerequisites are not allowed")
         if self.identifier in self.unlocks:
             raise ValueError("a clue cannot unlock itself")
 
@@ -157,10 +157,10 @@ class Investigation:
         discovered = payload.get("discovered")
         if not isinstance(rows, list) or len(rows) > 500 or not isinstance(discovered, list):
             raise ValueError("invalid clue list or discovered list")
-        if len(discovered) != len(set(discovered)) or any(
-            not isinstance(identifier, str) for identifier in discovered
-        ):
-            raise ValueError("duplicate or invalid discovered clues")
+        if any(not isinstance(identifier, str) for identifier in discovered):
+            raise ValueError("invalid discovered clue identifier")
+        if len(discovered) != len(set(discovered)):
+            raise ValueError("duplicate discovered clues")
         clues: dict[str, Clue] = {}
         for row in rows:
             if not isinstance(row, dict) or not isinstance(row.get("unlocks"), list):
