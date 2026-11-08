@@ -19,10 +19,10 @@ class Suspect:
         _text(self.name, "suspect name", 100)
         if not isinstance(self.exonerated_by, tuple):
             raise ValueError("exonerating clues must be a tuple")
-        if len(set(self.exonerated_by)) != len(self.exonerated_by):
-            raise ValueError("duplicate exonerating clues")
         for identifier in self.exonerated_by:
             _text(identifier, "exonerating clue", 80)
+        if len(set(self.exonerated_by)) != len(self.exonerated_by):
+            raise ValueError("duplicate exonerating clues")
 
 
 @dataclass
@@ -62,6 +62,8 @@ class CaseFile:
             raise ValueError("closed must be boolean")
         if self.closed != (bool(self.attempts) and self.attempts[-1] == self.culprit):
             raise ValueError("closed state conflicts with accusation history")
+        if self.culprit in self.attempts[:-1]:
+            raise ValueError("correct accusation must end the case")
         if self.closed and not self.investigation.solved(self.required):
             raise ValueError("closed case is missing required evidence")
 
