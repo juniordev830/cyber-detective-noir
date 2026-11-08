@@ -38,6 +38,11 @@ func _unhandled_input(event: InputEvent) -> void:
 		if key_event.pressed and not key_event.echo and key_event.physical_keycode == KEY_R:
 			get_tree().reload_current_scene()
 			return
+		if key_event.pressed and not key_event.echo and key_event.physical_keycode == KEY_H:
+			if not case_closed:
+				notice = Rules.next_hint(evidence)
+				queue_redraw()
+			return
 	var point := Vector2.ZERO
 	var selected := false
 	if event is InputEventMouseButton:
@@ -86,6 +91,7 @@ func _draw() -> void:
 		draw_line(Vector2(rain_x, rain_y), Vector2(rain_x - 12, rain_y + 28), Color(0.31, 0.68, 0.89, 0.21), 1.0)
 	_draw_text(Vector2(53, 62), "CYBER DETECTIVE / NOIR", 35, Color("#7df5ff"))
 	_draw_text(Vector2(53, 95), "CASO 001: O CHIP DESAPARECIDO", 18, Color("#c6d9e2"))
+	_draw_text(Vector2(992, 95), "H: DICA", 16, Color("#7df5ff"))
 	_draw_text(Vector2(53, 126), "Um chip de pesquisa desapareceu do laboratorio. Investigue a cena do crime.", 16, Color("#a2b9c9"))
 	for i in range(evidence_rects.size()):
 		var box: Rect2 = evidence_rects[i]
@@ -100,7 +106,7 @@ func _draw() -> void:
 	draw_rect(Rect2(40, 488, 1200, 214), Color("#0b2132"))
 	draw_line(Vector2(40, 486), Vector2(1240, 486), Color("#4d8ca1"), 2.0)
 	_draw_text(Vector2(62, 525), "QUADRO DE EVIDENCIAS", 20, Color("#8ceeea"))
-	_draw_text(Vector2(62, 558), "Pistas coletadas: %d / 3" % Rules.found_count(evidence), 18)
+	_draw_text(Vector2(62, 558), "Pistas coletadas: %d / 3   |   Faltam: %d" % [Rules.found_count(evidence), Rules.missing_count(evidence)], 18)
 	_draw_text(Vector2(62, 583), notice, 15, Color("#ffe5b5"))
 	if Rules.can_accuse(evidence) and not case_closed:
 		for i in range(suspect_rects.size()):
