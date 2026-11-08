@@ -24,3 +24,10 @@ godot --headless --path . --script tests/test_case_rules.gd
 
 ## Limitações
 É um protótipo de um caso, sem diálogos ramificados, salvamento, inventário persistente, arte final, áudio ou múltiplos cenários. O editor Godot deve ser usado para validar a experiência visual antes de publicar o jogo.
+
+
+## Sistema de dicas (novo)
+
+Durante a investigação, pressione **H** para receber uma orientação sobre a próxima pista ainda não encontrada. As dicas não identificam o culpado: apenas apontam o local que falta examinar. O quadro agora mostra quantas evidências estão pendentes.
+
+O cálculo foi isolado em `scripts/case_rules.gd` e coberto por testes, incluindo estados completos e dados inválidos. Após concluir o caso, as dicas não alteram o resultado; use **R** para reiniciar.
