@@ -1,6 +1,6 @@
 # Cyber Detective Noir
 
-Protótipo de investigação noir com regras testáveis em Python. Esta branch contém
+Protótipo de investigação noir com regras testáveis em Python. Este repositório contém
 um **modo de demonstração por terminal**, independente de bibliotecas externas.
 A integração visual com Godot é um trabalho separado; este módulo ainda não
 controla a cena gráfica do jogo.
@@ -61,9 +61,9 @@ A gravação atômica protege contra arquivos parcialmente escritos, mas
 não oferece criptografia, isolamento de usuários ou controle de acesso.
 
 A interface gráfica Godot, arte, áudio e múltiplos casos não fazem parte
-desta branch. Não mesclar com a `main` sem revisão e autorização.
+desta versão. As alterações foram revisadas e autorizadas para integração ao branch principal.
 
-## Incremento: relatório de investigação (em revisão)
+## Incremento: relatório de investigação
 
 `case_report.py` produz relatório JSON de pistas coletadas, pistas disponíveis, pré-requisitos bloqueados e progresso sem alterar o save ou expor a solução por adivinhação.
 
@@ -74,3 +74,7 @@ python -m unittest test_case_report.py -v
 ```
 
 O arquivo opcional `investigacao.json` segue o formato versionado de `Investigation.to_dict()`. O relatório não substitui a interface narrativa.
+
+## Próximas etapas
+
+O escopo original prevê capítulos com cenários interativos, diálogos e integração gráfica. O modo terminal entrega apenas a primeira experiência verificável; a interface Godot, assets e conteúdo narrativo mais amplo continuam pendentes. Todos os casos e personagens demonstrativos são fictícios.
