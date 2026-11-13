@@ -62,3 +62,15 @@ não oferece criptografia, isolamento de usuários ou controle de acesso.
 
 A interface gráfica Godot, arte, áudio e múltiplos casos não fazem parte
 desta branch. Não mesclar com a `main` sem revisão e autorização.
+
+## Incremento: relatório de investigação (em revisão)
+
+`case_report.py` produz relatório JSON de pistas coletadas, pistas disponíveis, pré-requisitos bloqueados e progresso sem alterar o save ou expor a solução por adivinhação.
+
+```bash
+python case_report.py
+python case_report.py investigacao.json
+python -m unittest test_case_report.py -v
+```
+
+O arquivo opcional `investigacao.json` segue o formato versionado de `Investigation.to_dict()`. O relatório não substitui a interface narrativa.
