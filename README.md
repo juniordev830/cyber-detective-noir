@@ -1,35 +1,80 @@
 # Cyber Detective Noir
 
-Jogo de investigação de atmosfera noir **planejado**, com análise de evidências, diálogo e decisões.
+Protótipo de investigação noir com regras testáveis em Python. Este repositório contém
+um **modo de demonstração por terminal**, independente de bibliotecas externas.
+A integração visual com Godot é um trabalho separado; este módulo ainda não
+controla a cena gráfica do jogo.
 
-> **Estado atual:** apenas documentação inicial e licença. Não há capítulos, assets, diálogos interativos ou executável neste repositório.
+## Executar o caso demonstrativo
 
-## Escopo narrativo inicial
+Requer Python 3.11 ou superior. Na raiz do repositório:
 
-Um caso fictício curto com três locais, três pistas e uma conclusão alcançada por dedução. Para manter a primeira versão testável, o jogo pode começar em formato texto antes de receber cenários gráficos.
+```bash
+python detective_cli.py --save meu-caso.json new
+python detective_cli.py --save meu-caso.json status
+python detective_cli.py --save meu-caso.json locations
+python detective_cli.py --save meu-caso.json hint
+python detective_cli.py --save meu-caso.json inspect camera alley
+python detective_cli.py --save meu-caso.json inspect badge alley
+python detective_cli.py --save meu-caso.json inspect door lab
+python detective_cli.py --save meu-caso.json inspect logs office
+python detective_cli.py --save meu-caso.json suspects
+python detective_cli.py --save meu-caso.json accuse technician
+```
 
-## Núcleo de regras
+O comando `new` não substitui um salvamento existente. Cada descoberta e
+acusação é persistida em JSON usando um arquivo temporário e substituição
+atômica. Uma pista só pode ser coletada no local correto, após as dependências
+serem desbloqueadas. Suspeitos exonerados pelas provas não podem ser acusados.
 
-- Cada pista tem ID, descrição e condição de descoberta.
-- Uma pista descoberta não deve ser duplicada no inventário.
-- A dedução final exige um conjunto explícito de evidências, não um palpite escondido do código.
-- O jogador pode rever pistas e voltar aos locais sem perder progresso.
-- Decisões que alteram o estado devem ser reproduzíveis após recarregar um save.
+## Testes e integração contínua
 
-## Critérios de aceitação
+```bash
+python -m unittest discover -v -p 'test_*.py'
+python -m compileall -q investigation.py casebook.py detective_cli.py
+```
 
-1. Três pistas fictícias podem ser descobertas em qualquer ordem permitida.
-2. O caderno mostra apenas pistas coletadas.
-3. Acusar alguém sem evidências suficientes apresenta uma resposta clara, sem travar a história.
-4. Completar o conjunto de pistas desbloqueia conclusão.
-5. Salvar e carregar preserva escolhas e pistas sem duplicar eventos.
+O workflow `.github/workflows/python-investigation.yml` executa os testes
+automaticamente nas versões 3.11, 3.12 e 3.13 do Python.
 
-## Implementação sugerida
+## Arquitetura
 
-- [ ] Escrever um caso original, com árvore simples de decisões.
-- [ ] Testar lógica de evidências e estado em módulo independente da interface.
-- [ ] Criar protótipo navegável em texto.
-- [ ] Evoluir para UI e recursos visuais com licenças verificáveis.
-- [ ] Documentar a execução real antes de anunciar demo.
+- `investigation.py`: grafo acíclico de pistas, locais, pré-requisitos,
+  dicas sem spoilers, progresso e remoção de descobertas dependentes.
+- `casebook.py`: suspeitos, evidências exoneratórias, acusações,
+  estado do caso, validação de saves e gravação atômica.
+- `detective_cli.py`: comandos do modo jogável em terminal.
+- `test_*.py`: testes de regras, persistência, integridade e fluxo completo.
 
-Não usar dados pessoais reais nem simular coleta indevida de informações de terceiros.
+O caso de exemplo possui seis pistas, três suspeitos e quatro provas
+obrigatórias para uma acusação. A dica informa apenas uma pista acessível,
+sem entregar a solução.
+
+## Limitações e segurança
+
+Este é um protótipo **local**, sem autenticação e sem integração com
+servidores. O arquivo JSON contém a definição do caso, incluindo a resposta,
+portanto **não é apropriado para distribuir mistérios sem spoilers**.
+Salvamentos têm limite de 1 MiB, e o carregamento valida referências,
+ciclos de dependências, tentativas e consistência do encerramento.
+A gravação atômica protege contra arquivos parcialmente escritos, mas
+não oferece criptografia, isolamento de usuários ou controle de acesso.
+
+A interface gráfica Godot, arte, áudio e múltiplos casos não fazem parte
+desta versão. As alterações foram revisadas e autorizadas para integração ao branch principal.
+
+## Incremento: relatório de investigação
+
+`case_report.py` produz relatório JSON de pistas coletadas, pistas disponíveis, pré-requisitos bloqueados e progresso sem alterar o save ou expor a solução por adivinhação.
+
+```bash
+python case_report.py
+python case_report.py investigacao.json
+python -m unittest test_case_report.py -v
+```
+
+O arquivo opcional `investigacao.json` segue o formato versionado de `Investigation.to_dict()`. O relatório não substitui a interface narrativa.
+
+## Próximas etapas
+
+O escopo original prevê capítulos com cenários interativos, diálogos e integração gráfica. O modo terminal entrega apenas a primeira experiência verificável; a interface Godot, assets e conteúdo narrativo mais amplo continuam pendentes. Todos os casos e personagens demonstrativos são fictícios.
