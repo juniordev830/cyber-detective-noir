@@ -1,0 +1,19 @@
+name: Python investigation engine
+on:
+  push:
+  pull_request:
+jobs:
+  investigation:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.11', '3.12', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile investigation modules
+        run: python -m compileall -q investigation.py test_investigation.py
+      - name: Run unit tests
+        run: python -m unittest discover -v -p 'test_*.py'
