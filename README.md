@@ -2,8 +2,7 @@
 
 Protótipo de investigação noir com regras testáveis em Python. Este repositório contém
 um **modo de demonstração por terminal**, independente de bibliotecas externas.
-A integração visual com Godot é um trabalho separado; este módulo ainda não
-controla a cena gráfica do jogo.
+O modo de terminal funciona de forma independente da interface Godot.
 
 ## Executar o caso demonstrativo
 
@@ -77,4 +76,38 @@ O arquivo opcional `investigacao.json` segue o formato versionado de `Investigat
 
 ## Próximas etapas
 
-O escopo original prevê capítulos com cenários interativos, diálogos e integração gráfica. O modo terminal entrega apenas a primeira experiência verificável; a interface Godot, assets e conteúdo narrativo mais amplo continuam pendentes. Todos os casos e personagens demonstrativos são fictícios.
+O escopo original prevê capítulos com cenários interativos, diálogos e integração gráfica. O modo terminal entrega apenas a primeira experiência verificável; o conteúdo narrativo mais amplo continua planejado. Todos os casos e personagens demonstrativos são fictícios.
+
+## Protótipo visual em Godot
+
+O modo visual é um protótipo de investigação visual 2D em Godot 4.2+, com um caso curto e gráficos geométricos de estilo neon/noir.
+
+### Como jogar
+1. Abra `project.godot` no Godot e pressione **F5**.
+2. Clique nos três locais de investigação para descobrir pistas.
+3. Após encontrar todas as pistas, escolha o suspeito.
+4. Pressione **R** para reiniciar.
+
+## História demonstrativa
+No caso **O Chip Desaparecido**, a câmera foi desligada, um cartão de acesso foi usado e não havia sinais de arrombamento. O jogador deve conectar as pistas e apontar o responsável.
+
+## Funcionalidades
+- Cena urbana em 2D com chuva animada e painéis de investigação.
+- Três locais clicáveis, quadro de evidências, interrogatório dos suspeitos e conclusão.
+- Regras isoladas em `scripts/case_rules.gd` e testes `tests/test_case_rules.gd`.
+- CI headless verifica as regras e a carga inicial da cena.
+
+## Executar testes
+```bash
+godot --headless --path . --script tests/test_case_rules.gd
+```
+
+## Limitações
+É um protótipo de um caso, sem diálogos ramificados, salvamento, inventário persistente, arte final, áudio ou múltiplos cenários. O editor Godot deve ser usado para validar a experiência visual antes de publicar o jogo.
+
+
+## Sistema de dicas (novo)
+
+Durante a investigação, pressione **H** para receber uma orientação sobre a próxima pista ainda não encontrada. As dicas não identificam o culpado: apenas apontam o local que falta examinar. O quadro agora mostra quantas evidências estão pendentes.
+
+O cálculo foi isolado em `scripts/case_rules.gd` e coberto por testes, incluindo estados completos e dados inválidos. Após concluir o caso, as dicas não alteram o resultado; use **R** para reiniciar.
