@@ -1,13 +1,19 @@
 name: Godot detective tests
 on: [push, pull_request]
+permissions:
+  contents: read
+
 jobs:
   godot:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
       - name: Download Godot 4.3
         run: |
           curl -L --fail --retry 3 -o godot.zip https://github.com/godotengine/godot-builds/releases/download/4.3-stable/Godot_v4.3-stable_linux.x86_64.zip
+          echo "fd52bb4ba8acc30ca5accd1c566d470ad7282f891ccc0995dfafabcf92bcf76280ce182bf9d80ebd885f3ed2165d01e1fc3f2928436b15498dfbd98656c2a45a  godot.zip" | sha512sum --check --strict
           unzip -q godot.zip
           chmod +x Godot_v4.3-stable_linux.x86_64
       - name: Rule checks
